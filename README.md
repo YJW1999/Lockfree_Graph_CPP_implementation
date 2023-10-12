@@ -9,6 +9,7 @@ license:
 
 Report:
 In this part, every function in the API will be proven its linearizability.
+
 1.create_graph()
 An atomic int global variable 'is_created' is used to indicate whether a graph is created or not, the graph will only be created when 'is_created' equal to 0. The linearization point is after the atomically adding to the is_created. Once the first thead adds it from 0 to 1, other threads will not be able to read 0 from is_created, also there is no other functions use is_created variable, thus, the function is linearizable. 
 
