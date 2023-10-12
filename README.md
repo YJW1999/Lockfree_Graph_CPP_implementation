@@ -21,7 +21,7 @@ An atomic int global variable 'is_created' is used to indicate whether a graph i
 
 2.add_vertex()
 
-An atomic size_t counter 'current_capacity' is used to record the number of vertexes that has been added. The 'current_capacity will only be added if it is smaller than the maximum_capacity'. The linearization point is at where after the CAS loop.
+An atomic size_t counter 'current_capacity' is used to record the number of vertexes that has been added. The 'current_capacity will only be added if it is smaller than the maximum_capacity'. The linearization point is at where after the CAS loop. The CAS loop will succeed and add the value only if the number is less than the maximum capacity. After the linearization point, the new value of 'current_capacity' is visible to all other thread that read it, thus, the funtion is linearizable.
 
 
 References:
