@@ -1,2 +1,2 @@
-# Lockfree-Graph-C-implementation
+# Lockfree-Graph-C++-implementation
 using CAS and FAA
