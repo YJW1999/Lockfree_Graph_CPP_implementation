@@ -21,6 +21,7 @@ An atomic int global variable 'is_created' is used to indicate whether a graph i
 
 2.add_vertex()
 
+An atomic size_t counter 'current_capacity' is used to record the number of vertexes that has been added.
 
 
 References:
