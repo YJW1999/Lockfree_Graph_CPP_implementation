@@ -21,7 +21,7 @@ An atomic int global variable 'is_created' is used to indicate whether a graph i
 
 2.add_vertex()
 
-An atomic size_t counter 'current_capacity' is used to record the number of vertexes that have been added. 
+An atomic size_t counter 'current_capacity' is used to record the number of vertexes that have been added. A CAS loop is used to increment the value 'current_capacity' and it is the only operation to change its value.
 
 
 3.add_edge()
