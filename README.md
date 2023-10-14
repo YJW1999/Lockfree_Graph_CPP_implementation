@@ -21,7 +21,7 @@ An atomic int global variable 'is_created' is used to indicate whether a graph i
 
 2.add_vertex()
 
-An atomic size_t counter 'current_capacity' is used to record the number of vertexes that have been added. A CAS loop is used to increment the value 'current_capacity' and it is the only operation to change its value.
+An atomic size_t counter 'current_capacity' is used to record the number of vertexes that have been added. A CAS loop is used to increment the value 'current_capacity' and it is the only operation to change its value. Before the CAS loop, we check if the current_capacity is less than max_capacity, in every iteration, again we check if the current_capacity is less than max_capacity, and then do the CAS. This makes sure that the increment only happens when 'current_capacity' is less than the 'max_capacity'. The increment is done by CAS loop atoimically which is linearizable.
 
 
 3.add_edge()
