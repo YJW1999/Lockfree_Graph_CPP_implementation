@@ -27,6 +27,7 @@ An atomic size_t counter 'current_capacity' is used to record the number of vert
 
 
 3.add_edge()
-Initially, some conditions will be chekcked including whether a graph or vertex is created or not and does the edge connect to the same vertex.   
+In the first step, the function will go through the linked list that contains all edges that the vertex 'i' connects, if it finds the edge to 'j', then a atomic store() is used to set the weight of the edge to 0. Since the delete_edge operation is not considered, it is correct that the weight should always set to 0 if it is existed. Since the write operation is atomic, then the other threads whatever it is read or write to the edge can notice the change imediately, thus, the first step is linearizable.
+In the second step, the edge hasn't found so it needs to be added to the linkedlist.
 
 References:
