@@ -37,7 +37,12 @@ In the second path, is relies on local variable temp and won't change any state,
 
 3.add_edge()
 
-We assume all read and write are atomic.
+We assume all read and write are atomic. 
+
+There is only 1 path, the read of 'adjacency_list' is atomic. The while loop is rely on local variable 'cur', every read of cur is atomic. There is a sub path inside this path which the comparison relies on local 1 local variable 'cur->edge.first' and const variable j, the linearization point in this sub path is after the atomic write, so still in a consistent state, thus the sub path is linearizable. After the while loop, the last line is a function call on a consistent index of 'adjacency_list' as it won't changed after added.
+
+
+3.1 add_Node()
 
 
 References:
