@@ -15,7 +15,7 @@ Report:
 
 In this part, every function in the API will be proven its linearizability and the results of some experiment tests.
 
-Note: All functions except 'create_graph' will check whether a graph is created or not. All functions except 'create_graph', 'add_vertex' will check whether the vertex(es) is/are created or not.
+Note: All functions except 'create_graph' will check whether a graph is created or not. All functions except 'create_graph', 'add_vertex' will check whether the vertex(es) is/are created or not. The linearizablity will be proved in their seperate part. 
 
 1.create_graph()
 
@@ -37,6 +37,7 @@ In the second path, is relies on local variable temp and won't change any state,
 
 3.add_edge()
 
+We assume all read and write are atomic.
 
 
 References:
