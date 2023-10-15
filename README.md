@@ -15,6 +15,8 @@ Report:
 
 In this part, every function in the API will be proven its linearizability and the results of some experiment tests.
 
+Note: All functions except 'create_graph' will check whether a graph is created or not. All functions except 'create_graph', 'add_vertex' will check whether the vertex(es) is/are created or not.
+
 1.create_graph()
 
 An atomic int global variable 'is_created' is used to indicate whether a graph is created or not, the graph will only be created when 'is_created' is equal to 0. We use a local variable to record the value before the fetch_add function and check if this local variable equal 0, we create the graph. Since fetch_add is an atomic operation, so it is linearizable and only 1 local variable in 1 thread will record a 0, thus, only 1 graph will be created successfully.
@@ -25,5 +27,6 @@ An atomic size_t counter 'current_capacity' is used to record the number of vert
 
 
 3.add_edge()
+Initially, some conditions will be chekcked including whether a graph or vertex is created or not and does the edge connect to the same vertex.   
 
 References:
