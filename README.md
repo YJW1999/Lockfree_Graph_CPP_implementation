@@ -44,5 +44,9 @@ There is only 1 path, the read of 'adjacency_list' is atomic. The while loop is 
 
 3.1 add_Node()
 
+We assume all read write and comparison of second last Node and tail are atomic.
+
+There is only 1 path. Even there is a atomic write that points 'new_Node->Next' to tail dummy Node, but it is a local write, it won't change the global state. The reason is that it is a singly linked list and no others Node's Next point to new_Node, therefore, in other threads, it cannot read the new_Node. The loop is done by CAS, the linearization point is after CAS, since CAS is atomic, so it is linearizable. There is a sub path inside the CAS loop, all read and write in the while loop are tomic, the write operation rely on two consistent variable 'cur->edge.first' and 'j' and it is atomic, thus, the sub path is linearizable. So, since the whole path is linearizable. 
+
 
 References:
