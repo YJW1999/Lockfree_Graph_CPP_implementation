@@ -56,5 +56,12 @@ We assume all read and write are atomic.
 There is only 1 path. Firstly, a 'tmp' is read the head of linked list of vertex i, then use a while loop to go through the linkled list, all these read operations are atomic. Inside the while loop, there is a sub path that has a write operation. This relies on a comparison between two consistent variables. The linearization point is after atomic write operation, since it is atomic, the state keeps consistent, thus, the function is linearizable. 
 
 
+5. dec_label()
+
+We assume all read and write are atomic, and the CAS loop is atomic.
+
+
+
+
 4.
 References:
