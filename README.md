@@ -17,6 +17,22 @@ In this part, every function in the API will be proven its linearizability and t
 
 Note: All functions except 'create_graph' will check whether a graph is created or not. All functions except 'create_graph', 'add_vertex' will check whether the vertex(es) is/are created or not. The linearizablity will be proved in their seperate part. 
 
+0. is_vertex_valid()
+
+We assume all read operations are atomic. There are two paths.
+
+In the first path, it returns false which relies on a condition check between a const variable and a atomic read operation, thus it is linearizable.
+
+In the second path, it returns a false which relies on a conditon check between two const variable, thus it is linearizable. 
+
+
+0.1 Is_graph_created()
+
+We assume the only one read operation is atomic.
+
+There is only 1 path, it compares with a value that read atomically and 0, thus it is linearizable.
+
+
 1.create_graph()
 
 We assume that all read and write(fetch_add, fetch_sub) to the 'is_created' are atomic. In the main path, if the adjacency points to a nullptr, then 'is_created' will add 1. Also, a local int varaible i will record the value before adding. Then there are two paths.
