@@ -48,5 +48,13 @@ We assume all read write and comparison of second last Node and tail are atomic.
 
 There is only 1 path. Even there is a atomic write that points 'new_Node->Next' to tail dummy Node, but it is a local write, it won't change the global state. The reason is that it is a singly linked list and no others Node's Next point to new_Node, therefore, in other threads, it cannot read the new_Node. There is a sub path inside the CAS loop, all read and write in the while loop are atomic, the write operation relies on two consistent variable 'cur->edge.first' and 'j' and it is atomic, thus, the sub path is linearizable. Back to the CAS loop, the adding process is done by CAS and the position it insersion is at the tail, this ensures that other threads that read the same linked list will notice the new Node and have to read it because it is at the tail. The state is consistent before the insersion and after the insersion. Thus, this path is linearizable. 
 
-4.1 
+
+4. inc_label()
+
+We assume all read and write are atomic. 
+
+There is only 1 path. Firstly, a 'tmp' is read the head of linked list of vertex i, then use a while loop to go through the linkled list, all these read operations are atomic. Inside the while loop, there is a sub path that has a write operation. This relies on a comparison between two consistent variables. 
+
+
+4.
 References:
