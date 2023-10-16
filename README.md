@@ -76,6 +76,11 @@ There is only 1 path. A 'cur' atomically read the head of the source vertex's ed
 
 7. Is_reachable()
 
+We assume that all read operations are atomic.
+
+There is only 1 path. The while loop relies on a conditon check of whether the local queue is empty or not. In every iteration of the while loop, a 'tmp' is used to read one vertex's edge linked list, and this read is atomic. The inside while loop relies on a condition check which are based on a comparison between 'tmp' and the 'tail' of that linked list, since these two Nodes will not be deleted, so, these two Nodes are in a consistent states. In every iteration of the inside while loop, there are two sub paths. In the first sub path, in has a return which is relies on a comparasion between a consistent value and a local variable, thus, the first sub path is linearizable. In the second sub path, it also relies on the same condition as the first one, and it only write to a local queue, thus this sub path is also linearizable. So, this path is linearizable. 
+
+
 
 
 References:
