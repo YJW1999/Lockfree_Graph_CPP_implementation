@@ -53,15 +53,19 @@ There is only 1 path. Even there is a atomic write that points 'new_Node->Next' 
 
 We assume all read and write are atomic. 
 
-There is only 1 path. Firstly, a 'tmp' is read the head of linked list of vertex i, then use a while loop to go through the linkled list, all these read operations are atomic. Inside the while loop, there is a sub path that has a write operation. This relies on a comparison between two consistent variables. The linearization point is after atomic write operation, since it is atomic, the state keeps consistent, thus, the function is linearizable. 
+There is only 1 path. Firstly, a 'cur' reads the head of linked list of vertex i, then use a while loop to go through the linkled list, all these read operations are atomic. Inside the while loop, there is a sub path that has a write operation. This relies on a comparison between two consistent variables. The linearization point is after atomic write operation, since it is atomic, the state keeps consistent, thus, the function is linearizable. 
 
 
 5. dec_label()
 
 We assume all read and write are atomic, and the CAS loop is atomic.
 
+In the main path, a 'cur' reads the head of linked list of vertex i, then use a while loop to go through the linked list, all these read operations are atomic. Inside the while loop, 'tmp_weight' atomically read the weight of 'cur', 'decreased_val' is the minus of two local variable. Then there are two sub paths.
+
+In the first sub path, A CAS loop is used to change the weight of the label with the 'decreased_val', it relies on two comparisons between local_variables or consistent variables and also relies on that the decreased value is less than the weight of the edge(one of the condition is to check this). Inside the CAS loop, for every iteration, the value of 'tmp_weight' will be updated with an atomic read and the value of 'decreased_val' will be updated upon two local variables. Then, a re-comparison between decrement value and weight is done to ensure that the new weight value changed by other threads is still larger than the decrement value. The linearization point is after the CAS loop, and the state keeps consistent since the CAS loop is atomic, thus, this path is linearizable. 
+
+In the second sub path, it ends the threads. It relies on two condition check, one condition is a comparison between two consistent variables, the other one is a comparison between an atomic read and a consistent variable, thus, this path is also linearizable. 
 
 
 
-4.
 References:
