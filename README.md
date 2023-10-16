@@ -58,13 +58,23 @@ There is only 1 path. Firstly, a 'cur' reads the head of linked list of vertex i
 
 5. dec_label()
 
-We assume all read and write are atomic, and the CAS loop is atomic.
+We assume all reads and writes are atomic, and the CAS loop is atomic.
 
 In the main path, a 'cur' reads the head of linked list of vertex i, then use a while loop to go through the linked list, all these read operations are atomic. Inside the while loop, 'tmp_weight' atomically read the weight of 'cur', 'decreased_val' is the minus of two local variable. Then there are two sub paths.
 
 In the first sub path, A CAS loop is used to change the weight of the label with the 'decreased_val', it relies on two comparisons between local_variables or consistent variables and also relies on that the decreased value is less than the weight of the edge(one of the condition is to check this). Inside the CAS loop, for every iteration, the value of 'tmp_weight' will be updated with an atomic read and the value of 'decreased_val' will be updated upon two local variables. Then, a re-comparison between decrement value and weight is done to ensure that the new weight value changed by other threads is still larger than the decrement value. The linearization point is after the CAS loop, and the state keeps consistent since the CAS loop is atomic, thus, this path is linearizable. 
 
 In the second sub path, it ends the threads. It relies on two condition check, one condition is a comparison between two consistent variables, the other one is a comparison between an atomic read and a consistent variable, thus, this path is also linearizable. 
+
+
+6. are_connected()
+
+We assume all read operations are atomic.
+
+There is only 1 path. A 'cur' atomically read the head of the source vertex's edge linked list, and then go through the list, all these read are atomic. There is one sub path inside the while loop, return 'true'. This relies on a comparison between two consistent variables, thus this sub path is linearizable. So, the path is linearizable. 
+
+
+7. Is_reachable()
 
 
 
