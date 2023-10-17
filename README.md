@@ -81,10 +81,11 @@ The linearization point is in line 136 '!cur->edge.second.compare_exchange_weak(
 
 6. are_connected()
 
-We assume all read operations are atomic.
+We assume all read operations are atomic. There are two paths.
 
-There is only 1 path. A 'cur' atomically read the head of the source vertex's edge linked list, and then go through the list, all these read are atomic. There is one sub path inside the while loop, return 'true'. This relies on a comparison between two consistent variables, thus this sub path is linearizable. So, the path is linearizable. 
+In the first path, the linearization point is in line 164 'cur->edge.first == j', it does not change the state and relies on 1 consistent variable and 1 const variable, thus, this path is linearizable.
 
+In the second path, the linearization point is in linev 163 'cur' is false, it does not change the state and relies on 1 atomic read value, thus, this path is linearizable. 
 
 7. Is_reachable()
 
