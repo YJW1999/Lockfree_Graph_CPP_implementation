@@ -21,16 +21,16 @@ Note: All functions except 'create_graph' will check whether a graph is created 
 
 We assume all read operations are atomic. There are two paths.
 
-In the first path, the linearization point is in line 271, when 'i > tmp || j > tmp' returns true. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
+In the first path, the linearization point is in line 272, when 'i > tmp || j > tmp' returns true. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
-In the second path, the linearization point is in line 271, when 'i > tmp || j > tmp' returns false. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
+In the second path, the linearization point is in line 272, when 'i > tmp || j > tmp' returns false. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
 
 0.1 Is_graph_created()
 
 We assume the only one read operation is atomic.
 
-There is only 1 path, the linearization point is in line 283 which relies on a comparasion between a atomic read value and an int, thus, the function is linearizable. 
+There is only 1 path, the linearization point is in line 284 which relies on a comparasion between a atomic read value and an int, thus, the function is linearizable. 
 
 
 1.create_graph()
@@ -46,7 +46,7 @@ In the second path, the linearization point is in line 50 'is_created.fetch_sub(
 
 We assume that all read and write(fetch_add, fetch_sub) to the 'is_created' are atomic. Also the comparison of 'temp' and 'current_capacity' is atomic. 
 
-In the first path, The linearization point of this path is in line 66 '!current_capacity.compare_exchange_weak(temp, temp + 1)' is true, since it is done by CAS which is atomic, the state is consistent between before writing and after writing, this is linearizable. It relies on a condition check in line 65 where 'temp < max_capacity' is true, this comparison is between a atomic read value and a static variable, thus, this is linearizable. Inside the CAS loop, for every iteration, there are two paths, the linearization points for both paths are in line 67 where 'temp+1 <= max_capacity' is true or false, the comparison is between an atomic read variable and a static variable, thus these two paths inside the while loop are all linearizable, thus this whole path is linearizable.
+In the first path, The linearization point of this path is in line 66 '!current_capacity.compare_exchange_weak(temp, temp + 1)' is true, since it is done by CAS which is atomic, the state is consistent between before writing and after writing, this is linearizable. The first iteration relies on a condition check in line 65 where 'temp < max_capacity' is true, this comparison is between a atomic read value and a static variable, thus, this is linearizable. The rest iterations relies on the two paths inside the while loop in line 67 where 'temp+1 <= max_capacity' is true or false, the comparison is between an atomic read variable and a static variable, thus these two paths inside the while loop are all linearizable, thus this whole path is linearizable.
 
 In the second path, the lineraization point is in line 67 where 'temp+1 <= max_capacity' is false, this comparison is proved to be linearizable in the first path, thus this path is linearizable. 
 
@@ -55,14 +55,14 @@ In the second path, the lineraization point is in line 67 where 'temp+1 <= max_c
 
 We assume all read and write are atomic. 
 
-There is only 1 path, the read of 'adjacency_list' is atomic. The while loop is rely on local variable 'cur', every read of cur is atomic. There is a sub path inside this path which the comparison relies on local 1 local variable 'cur->edge.first' and const variable j, the linearization point in this sub path is after the atomic write, so still in a consistent state, thus the sub path is linearizable. After the while loop, the last line is a function call on a consistent index of 'adjacency_list' as it won't changed after added.
+There is only 1 path, the read of 'adjacency_list' is atomic. The while loop is rely on local variable 'cur', every read of cur is atomic. The linearization point is in line 91 'cur' is true, this is a atomic read variable, thus it is linearizable. There is a sub path inside this path which relies on 1 local variable 'cur->edge.first' and const variable j in line 92 'cur->edge.first == j'. The linearization point in this sub path is after the atomic writev in line 93 'cur->edge.second.store(0)', so still in a consistent state, thus the sub path is linearizable. After the while loop, the last line is a function call on a consistent index of 'adjacency_list' as it won't changed after added.
 
 
 3.1 add_Node()
 
 We assume all read write and comparison of second last Node and tail are atomic.
 
-There is only 1 path. Even there is a atomic write that points 'new_Node->Next' to tail dummy Node, but it is a local write, it won't change the global state. The reason is that it is a singly linked list and no others Node's Next point to new_Node, therefore, in other threads, it cannot read the new_Node. There is a sub path inside the CAS loop, all read and write in the while loop are atomic, the write operation relies on two consistent variable 'cur->edge.first' and 'j' and it is atomic, thus, the sub path is linearizable. Back to the CAS loop, the adding process is done by CAS and the position it insersion is at the tail, this ensures that other threads that read the same linked list will notice the new Node and have to read it because it is at the tail. The state is consistent before the insersion and after the insersion. Thus, this path is linearizable. 
+There is only 1 path. Even there is a atomic write that points 'new_Node->Next' to tail dummy Node in line 25, but it is a local write, it won't change the global state. The reason is that it is a singly linked list and no others Node's Next point to new_Node, therefore, in other threads, it cannot read the new_Node. The linearization point is in line 26 where '!cur->Next.compare_exchange_weak(tmp_tail, new_node)' is true. The first CAS loop does not relies on nothing, but the rest of the CAS loop relies on 'cur' points to the tail. 
 
 
 4. inc_label()
