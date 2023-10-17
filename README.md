@@ -6,7 +6,9 @@ This project is a C++ Implementation of a Lock-Free Graph using CAS and FAA, all
 
 
 Build:
+
 g++ -std=17 main.cpp, LockFreeGraph.cpp -o test
+
 ./test
 
 license:
