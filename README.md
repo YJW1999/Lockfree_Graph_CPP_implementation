@@ -6,7 +6,8 @@ This project is a C++ Implementation of a Lock-Free Graph using CAS and FAA, all
 
 
 Build:
-
+g++ -std=17 main.cpp, LockFreeGraph.cpp -o test
+./test
 
 license:
 
@@ -101,11 +102,14 @@ In the second path, the linearization point is in line 182, '!BFSqueue.empty()' 
 
 we assume that all read operations are atomic. 
 
-There is only 1 path. The linearization point is in line 233 where '!pq.empty()' is false which this is a contion check on a local queue object. It relies on 
+There is only 1 path. The linearization point is in line 233 where '!pq.empty()' is false which this is a contion check on a local queue object. It relies on the element in the queue which involves some read operations from an atomic object. Since these reads operation are all atomic, thus, this path is linearizable. 
 
 
+9. get_diameter()
 
+we assume that all read operations are atomic. 
 
+There is only 1 path. The linearization point is in line 260 'for (size_t i = 1; i <= capacity; ++i)' where i > capacity. The comparison is between a local variable and a atomic read value. This relies on a condition check in line 261 'j <= capacity' which is a comparison between a local variable and a atomic read value. Besides, there are two function call in the line 262, and 263 separately which has been shown linearizability before. Thus, the path is linearizable. 
 
 
 References:
