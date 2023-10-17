@@ -69,7 +69,7 @@ There is only 1 path. Even there is a atomic write that points 'new_Node->Next' 
 
 We assume all read and write are atomic. 
 
-There is only 1 path. Firstly, a 'cur' reads the head of linked list of vertex i, then use a while loop to go through the linkled list, all these read operations are atomic. Inside the while loop, there is a sub path that has a write operation. This relies on a comparison between two consistent variables. The linearization point is after atomic write operation, since it is atomic, the state keeps consistent, thus, the function is linearizable. 
+There is only 1 path. The linearization point is in line 113 'cur->edge.second.fetch_add(increment)'. The fetch_add is an atomic write. Also, it relies on two conditions, the first one is 'cur' is true in line 111 which all read operations are done atomically. The second condition is in line 112 'cur->edge.first == j' is true, this comparison is between two consistent variables, thus, this path is linearizable.
 
 
 5. dec_label()
