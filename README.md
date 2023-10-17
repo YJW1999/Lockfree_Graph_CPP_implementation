@@ -21,9 +21,9 @@ Note: All functions except 'create_graph' will check whether a graph is created 
 
 We assume all read operations are atomic. There are two paths.
 
-In the first path, it returns false which relies on a condition check between a const variable and a atomic read operation, thus it is linearizable.
+In the first path, the linearization point is in line 271, when 'i > tmp || j > tmp' returns true. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
-In the second path, it returns a false which relies on a conditon check between two const variable, thus it is linearizable. 
+In the second path, the linearization point is in line 271, when 'i > tmp || j > tmp' returns false. This relies on a comparison between a local variable that atomically read from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
 
 0.1 Is_graph_created()
