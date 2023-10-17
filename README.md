@@ -87,6 +87,7 @@ In the first path, the linearization point is in line 164 'cur->edge.first == j'
 
 In the second path, the linearization point is in linev 163 'cur' is false, it does not change the state and relies on 1 atomic read value, thus, this path is linearizable. 
 
+
 7. Is_reachable()
 
 We assume that all read operations are atomic. There are two paths in this function.
@@ -94,6 +95,11 @@ We assume that all read operations are atomic. There are two paths in this funct
 In the first path, the linearization point is in line 188 'tmp->edge.first == j', clearly this is a comparison between two consistent variable. It relies two conditon. The first condition is how is the 'cur' read every time, the answer is that cur read atomically in every iteration in the while loop. The second condition is in line 182, '!BFSqueue.empty()' is true, clearly it is a local variable, so the state keeps consistent. Thus, this path is linearizable.
 
 In the second path, the linearization point is in line 182, '!BFSqueue.empty()' is false which is a condition check for a local queue. This linearization point does not rely on any other condition, thus, this path is linearizable. 
+
+
+8. shortest_path()
+
+we assume that all read operations are atomic. There is only 1 path. 
 
 
 
