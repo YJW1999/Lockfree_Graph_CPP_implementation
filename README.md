@@ -76,11 +76,7 @@ There is only 1 path. The linearization point is in line 113 'cur->edge.second.f
 
 We assume all reads and writes are atomic, and the CAS loop is atomic.
 
-In the main path, a 'cur' reads the head of linked list of vertex i, then use a while loop to go through the linked list, all these read operations are atomic. Inside the while loop, 'tmp_weight' atomically read the weight of 'cur', 'decreased_val' is the minus of two local variable. Then there are two sub paths.
-
-In the first sub path, A CAS loop is used to change the weight of the label with the 'decreased_val', it relies on two comparisons between local_variables or consistent variables and also relies on that the decreased value is less than the weight of the edge(one of the condition is to check this). Inside the CAS loop, for every iteration, the value of 'tmp_weight' will be updated with an atomic read and the value of 'decreased_val' will be updated upon two local variables. Then, a re-comparison between decrement value and weight is done to ensure that the new weight value changed by other threads is still larger than the decrement value. The linearization point is after the CAS loop, and the state keeps consistent since the CAS loop is atomic, thus, this path is linearizable. 
-
-In the second sub path, it ends the threads. It relies on two condition check, one condition is a comparison between two consistent variables, the other one is a comparison between an atomic read and a consistent variable, thus, this path is also linearizable. 
+The linearization point is in line 136 '!cur->edge.second.compare_exchange_weak(tmp_weight, decreased_val)' is true. The CAS is a atomic operation, so the state is consistent before and after the value changed. The first iteration of this CAS loop relies on two conditions. The first contidion is in line 132 where the cur is true, and the cur reads value atomically in every iteration. The second condtion is in line 135 'cur->edge.first == j && tmp_weight >= decrement' is true, clearly these two comparison are done between atomic read value, const value and local variable. The rest iterations of the CAS loop rely on the condition in line 139 'tmp_weight < decrement', one variable is an atomic read, and the other one is a minus of the first variable and a const variable, this conditon gaurantees that this the CAS will only succeed if the weight is greater than the decrement value. Thus, the function is linearizable. 
 
 
 6. are_connected()
