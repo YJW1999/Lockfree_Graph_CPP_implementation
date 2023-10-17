@@ -30,7 +30,7 @@ In the second path, the linearization point is in line 271, when 'i > tmp || j >
 
 We assume the only one read operation is atomic.
 
-There is only 1 path, it compares with a value that read atomically and 0, thus it is linearizable.
+There is only 1 path, the linearization point is in line 283 which relies on a comparasion between a atomic read value and an int, thus, the function is linearizable. 
 
 
 1.create_graph()
