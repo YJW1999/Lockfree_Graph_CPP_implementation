@@ -35,11 +35,11 @@ There is only 1 path, the linearization point is in line 283 which relies on a c
 
 1.create_graph()
 
-We assume that all read and write(fetch_add, fetch_sub) to the 'is_created' are atomic. In the main path, if the adjacency points to a nullptr, then 'is_created' will add 1. Also, a local int varaible i will record the value before adding. Then there are two paths.
+We assume that all read and write(fetch_add, fetch_sub) to the 'is_created' are atomic. In the main path, the linearization point is in line 45, 'int i = is_created.fetch_add(1)', the write is linearizable because it is an atomic write. Since it relies on a condition check in line 44 'adjacency_list.load() == nullptr'. One is atomic read, and the other one is nullptr, thus, the main path is linearizable. There are two sub paths.
 
-In the first path, if adjacency_list is still point to nullptr and i is 0, then create the graph. The linearization point is after writing to adjacency_list, the write to 'adjacency_list' is atomic, so the state is still consistent before the writing and after the writing, thus, it is linearizable. 
+In the first path, the linearization point is in line 47, 'adjacency_list.store(new LockFreeLinkedList{max_capacity}+1)', this write is linearizable because it is an atomic write. Since it is relies on the line 46 when 'adjacency_list.load() == nullptr && i==0' is true, this two conditions are compared with atomic read value or local variable or nullptr or 0, thus, the path is linearizable. 
 
-In the second path, it also relies on local variable i, the linearization point is after fetch_sub, since it is also a atomic write operation, the state is still consistent, thus, it is linearizable.
+In the second path, the linearization point is in line 50 'is_created.fetch_sub(1)', this write is linearizable because it is an atomic write. This linearization point relies on the line 46 'adjacency_list.load() == nullptr && i==0' is false, this is proved to be linearizable in the first path. Thus, the path is linearizable.
 
 
 2.add_vertex()
