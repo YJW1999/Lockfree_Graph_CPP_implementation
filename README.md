@@ -76,7 +76,7 @@ There is only 1 path. The linearization point is in line 113 'cur->edge.second.f
 
 We assume all reads and writes are atomic, and the CAS loop is atomic.
 
-The linearization point is in line 136 '!cur->edge.second.compare_exchange_weak(tmp_weight, decreased_val)' is true. The CAS is a atomic operation, so the state is consistent before and after the value changed. The first iteration of this CAS loop relies on two conditions. The first contidion is in line 132 where the cur is true, and the cur reads value atomically in every iteration. The second condtion is in line 135 'cur->edge.first == j && tmp_weight >= decrement' is true, clearly these two comparison are done between atomic read value, const value and local variable. The rest iterations of the CAS loop rely on the condition in line 139 'tmp_weight < decrement', one variable is an atomic read, and the other one is a minus of the first variable and a const variable, this conditon gaurantees that  the CAS will only succeed if the weight is greater than the decrement value. Thus, the function is linearizable. 
+The linearization point is in line 136 '!cur->edge.second.compare_exchange_weak(tmp_weight, decreased_val)' is true. The CAS is a atomic operation, so the state is consistent before and after the value changed. The first iteration of this CAS loop relies on two conditions. The first contidion is in line 132 where the cur is true, and the cur reads value atomically in every iteration. The second condtion is in line 135 'cur->edge.first == j && tmp_weight >= decrement' is true, clearly these two comparison are done between atomic read value, const value and local variable. The rest iterations of the CAS loop rely on the condition in line 139 'tmp_weight < decrement', one variable is an atomic read, and the other one is a minus of the first variable and a const variable. This conditon gaurantees that  the CAS will only succeed if the weight is greater than the decrement value. Thus, the function is linearizable. 
 
 
 6. are_connected()
@@ -89,9 +89,13 @@ In the second path, the linearization point is in linev 163 'cur' is false, it d
 
 7. Is_reachable()
 
-We assume that all read operations are atomic.
+We assume that all read operations are atomic. There are two paths in this function.
 
-There is only 1 path. The while loop relies on a conditon check of whether the local queue is empty or not. In every iteration of the while loop, a 'tmp' is used to read one vertex's edge linked list, and this read is atomic. The inside while loop relies on a condition check which are based on a comparison between 'tmp' and the 'tail' of that linked list, since these two Nodes will not be deleted, so, these two Nodes are in a consistent states. In every iteration of the inside while loop, there are two sub paths. In the first sub path, in has a return which is relies on a comparasion between a consistent value and a local variable, thus, the first sub path is linearizable. In the second sub path, it also relies on the same condition as the first one, and it only write to a local queue, thus this sub path is also linearizable. So, this path is linearizable. 
+In the first path, the linearization point is in line 188 'tmp->edge.first == j', clearly this is a comparison between two consistent variable. It relies two conditon. The first condition is how is the 'cur' read every time, the answer is that cur read atomically in every iteration in the while loop. The second condition is in line 182, '!BFSqueue.empty()' is true, clearly it is a local variable, so the state keeps consistent. Thus, this path is linearizable.
+
+In the second path, the linearization point is in line 182, '!BFSqueue.empty()' is false which is a condition check for a local queue. This linearization point does not rely on any other condition, thus, this path is linearizable. 
+
+
 
 
 
