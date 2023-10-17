@@ -46,9 +46,9 @@ In the second path, the linearization point is in line 50 'is_created.fetch_sub(
 
 We assume that all read and write(fetch_add, fetch_sub) to the 'is_created' are atomic. Also the comparison of 'temp' and 'current_capacity' is atomic. 
 
-In the first path, The linearization point of this path is in line 66 '!current_capacity.compare_exchange_weak(temp, temp + 1)' is true, since it is done by CAS which is atomic, the state is consistent between before writing and after writing, this is linearizable.it also relies on local variable temp, inside the CAS loop, for every iteration, there are two paths, these two path are all repy on local variable and don't change any states, these two paths are linearizable. 
+In the first path, The linearization point of this path is in line 66 '!current_capacity.compare_exchange_weak(temp, temp + 1)' is true, since it is done by CAS which is atomic, the state is consistent between before writing and after writing, this is linearizable. It relies on a condition check in line 65 where 'temp < max_capacity' is true, this comparison is between a atomic read value and a static variable, thus, this is linearizable. Inside the CAS loop, for every iteration, there are two paths, the linearization points for both paths are in line 67 where 'temp+1 <= max_capacity' is true or false, the comparison is between an atomic read variable and a static variable, thus these two paths inside the while loop are all linearizable, thus this whole path is linearizable.
 
-In the second path, is relies on local variable temp and won't change any state, thus, it is linearizable. 
+In the second path, the lineraization point is in line 67 where 'temp+1 <= max_capacity' is false, this comparison is proved to be linearizable in the first path, thus this path is linearizable. 
 
 
 3.add_edge()
