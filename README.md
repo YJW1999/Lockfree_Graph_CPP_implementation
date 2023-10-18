@@ -7,9 +7,9 @@ This project is a C++ Implementation of a Lock-Free Graph using CAS and FAA, all
 
 Build:
 
-build executable file: g++ -std=17 main.cpp, LockFreeGraph.cpp -o test  
+build executable file: [g++ -std=17 main.cpp, LockFreeGraph.cpp -o test] 
 
-run executable file:   ./test
+run executable file:   [./test]
 
 
 license:
