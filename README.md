@@ -5,11 +5,13 @@ Description:
 This project is a C++ Implementation of a Lock-Free Graph using CAS and FAA, all functions are thread-safe, lock-free, and linearizable. The project consists of two files, the .cpp file contains the function and description, .h file contains the implementation for each function. The proof of linearizability for each function is in the report section of this ReadME file.
 
 
+
 Build:
 
 build executable file: [g++ -std=17 main.cpp, LockFreeGraph.cpp -o test] 
 
 run executable file:   [./test]
+
 
 
 license:
@@ -33,6 +35,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 
 
 Report:
@@ -133,6 +136,7 @@ There is only 1 path. The linearization point is in line 233 where '!pq.empty()'
 we assume that all read operations are atomic. 
 
 There is only 1 path. The linearization point is in line 260 'for (size_t i = 1; i <= capacity; ++i)' where i > capacity. The comparison is between a local variable and a atomic read value. This relies on a condition check in line 261 'j <= capacity' which is a comparison between a local variable and a atomic read value. Besides, there are two function call in the line 262, and 263 separately which has been shown linearizability before. Thus, the path is linearizable. 
+
 
 
 References:
