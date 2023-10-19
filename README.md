@@ -48,16 +48,16 @@ Note: All functions except 'create_graph' will check whether a graph is created 
 
 We assume all read operations are atomic. There are two paths.
 
-In the first path, the linearization point is in line 275, when 'i > tmp || j > tmp' returns true. This relies on a comparison between a local variable that atomically reads from 'current_capacity' and a const variable, thus, this path is linearizable. 
+In the first path, the linearization point is in line 280, when 'i > tmp || j > tmp' returns true. This relies on a comparison between a local variable that atomically reads from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
-In the second path, the linearization point is in line 275, when 'i > tmp || j > tmp' returns false. This relies on a comparison between a local variable that atomically reads from 'current_capacity' and a const variable, thus, this path is linearizable. 
+In the second path, the linearization point is in line 280, when 'i > tmp || j > tmp' returns false. This relies on a comparison between a local variable that atomically reads from 'current_capacity' and a const variable, thus, this path is linearizable. 
 
 
 0.1 Is_graph_created()
 
 We assume the only one read operation is atomic.
 
-There is only 1 path, the linearization point is in line 287 which relies on a comparison between an atomic read value and an int, thus, the function is linearizable. 
+There is only 1 path, the linearization point is in line 292 which relies on a comparison between an atomic read value and an int, thus, the function is linearizable. 
 
 
 1.create_graph()
@@ -119,23 +119,23 @@ In the second path, the linearization point is in line 163 'cur' is false, it do
 
 We assume that all read operations from atomic variables are atomic. There are two paths in this function.
 
-In the first path, the linearization point is in line 188 'tmp->edge.first == j', clearly this is a comparison between two consistent variables. It relies on two conditions. The first condition is how is the 'cur' read every time, the answer is that cur reads atomically in every iteration in the while loop. The second condition in line 182, '!BFSqueue.empty()' is true, clearly it is a local variable, so the state keeps consistent. Thus, this path is linearizable.
+In the first path, the linearization point is in line 189 'tmp->edge.first == j', clearly this is a comparison between two consistent variables. It relies on two conditions. The first condition is how is the 'cur' read every time, the answer is that cur reads atomically in every iteration in the while loop. The second condition in line 182, '!BFSqueue.empty()' is true, clearly it is a local variable, so the state keeps consistent. Thus, this path is linearizable.
 
-In the second path, the linearization point is in line 182, '!BFSqueue.empty()' is false which is a condition check for a local queue. This linearization point does not rely on any other condition, thus, this path is linearizable. 
+In the second path, the linearization point is in line 183, '!BFSqueue.empty()' is false which is a condition check for a local queue. This linearization point does not rely on any other condition, thus, this path is linearizable. 
 
 
 8. shortest_path()
 
 we assume that all read operations are atomic. 
 
-There is only 1 path. The linearization point is in line 233 where '!pq.empty()' is false which is a condition check on a local queue object. It relies on the element in the queue which involves some read operations from an atomic object. Since these read operations are all atomic, thus, this path is linearizable. 
+There is only 1 path. The linearization point is in line 238 where '!pq.empty()' is false which is a condition check on a local queue object. It relies on the element in the queue which involves some read operations from an atomic object. Since these read operations are all atomic, thus, this path is linearizable. 
 
 
 9. get_diameter()
 
 we assume that all read operations are atomic. 
 
-There is only 1 path. The linearization point is in line 260 'for (size_t i = 1; i <= capacity; ++i)' where i > capacity. The comparison is between a local variable and an atomic read value. This relies on a condition check in line 261 'j <= capacity' which is a comparison between a local variable and an atomic read value. Besides, there are two function calls in line 262, and 263 separately which has been shown linearizability before. Thus, the path is linearizable. 
+There is only 1 path. The linearization point is in line 265 'for (size_t i = 1; i <= capacity; ++i)' where i > capacity. The comparison is between a local variable and an atomic read value. This relies on a condition check in line 266 'j <= capacity' which is a comparison between a local variable and an atomic read value. Besides, there are two function calls in line 262, and 263 separately which has been shown linearizability before. Thus, the path is linearizable. 
 
 
 
