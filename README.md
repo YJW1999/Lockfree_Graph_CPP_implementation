@@ -14,7 +14,7 @@ run executable file:   [./test]
 
 
 
-license:
+License:
 
 Copyright (c) [2023] [Yijie Wu]
 
